@@ -5,10 +5,10 @@ class AppRoutes {
 
   // APP SHELL
   static String home = "/home";
-  static String movies = "/movies";
+  static String products = "/products";
   static String favourites = "/favourite";
   static String profile = "/profile";
-  static String watchlist = "/watchlist";
+  static String card = "/card";
 
   //
 }

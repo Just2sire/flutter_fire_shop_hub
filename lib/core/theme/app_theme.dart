@@ -39,16 +39,16 @@ class AppTheme {
   // -----------------------------------------------------------------------
   static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: AppColors.primary,           // #1C1B1F — charbon quasi-noir
+    primary: AppColors.primary, // #1C1B1F — charbon quasi-noir
     onPrimary: AppColors.white,
-    secondary: AppColors.secondary,       // #3D3B41 — charbon atténué
+    secondary: AppColors.secondary, // #3D3B41 — charbon atténué
     onSecondary: AppColors.white,
-    tertiary: AppColors.tertiary,         // #E5A00D — or ambré
+    tertiary: AppColors.tertiary, // #E5A00D — or ambré
     onTertiary: AppColors.white,
     error: AppColors.error,
     onError: AppColors.white,
-    surface: AppColors.surface,           // #FFFFFF — scaffold blanc pur
-    onSurface: AppColors.ink,             // #1C1B1F — texte sombre
+    surface: AppColors.surface, // #FFFFFF — scaffold blanc pur
+    onSurface: AppColors.ink, // #1C1B1F — texte sombre
     surfaceContainer: AppColors.surfaceContainer, // #E9E9E7 — cards gris chaud
     onSurfaceVariant: AppColors.ink54,
     outline: AppColors.neutral300,
@@ -57,18 +57,18 @@ class AppTheme {
   static const darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
     // #1C1B1F — adaptée dark (onPrimary = white)
-    primary: AppColors.primary,           
+    primary: AppColors.primary,
     onPrimary: AppColors.white,
-    secondary: AppColors.secondary,       // #3D3B41
+    secondary: AppColors.secondary, // #3D3B41
     onSecondary: AppColors.paleMint,
-    tertiary: AppColors.accentAmber,      // Or pour accents
+    tertiary: AppColors.accentAmber, // Or pour accents
     onTertiary: AppColors.ink,
     error: AppColors.error,
     onError: AppColors.white,
-    surface: AppColors.darkBackground,   // #0F0F0F — noir profond
-    onSurface: AppColors.paleMint,        // #FFFFFF — texte clair
+    surface: AppColors.darkBackground, // #0F0F0F — noir profond
+    onSurface: AppColors.paleMint, // #FFFFFF — texte clair
     surfaceContainer: AppColors.darkSurface, // #1A1A1A — cards dark
-    onSurfaceVariant: AppColors.paleMint70,  // texte secondaire atténué
+    onSurfaceVariant: AppColors.paleMint70, // texte secondaire atténué
     outline: AppColors.neutral700,
   );
 
@@ -81,7 +81,6 @@ class AppTheme {
     brightness: Brightness.light,
     colorScheme: lightColorScheme,
     scaffoldBackgroundColor: AppColors.surface, // #FFFFFF — blanc pur
-
     // Text theme
     textTheme: AppTextStyles.lightTextTheme.apply(
       fontFamily: fontFamily,
@@ -214,7 +213,7 @@ class AppTheme {
     // Bottom Navigation Bar
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
-      backgroundColor: AppColors.surface,  // blanc pur
+      backgroundColor: AppColors.surface, // blanc pur
       elevation: AppSpacing.elevationLg,
       selectedItemColor: lightColorScheme.primary,
       unselectedItemColor: AppColors.neutral400,
@@ -320,7 +319,6 @@ class AppTheme {
     brightness: Brightness.dark,
     colorScheme: darkColorScheme,
     scaffoldBackgroundColor: AppColors.darkBackground, // #0F0F0F
-
     // Text theme
     textTheme: AppTextStyles.darkTextTheme.apply(
       fontFamily: fontFamily,
@@ -386,6 +384,15 @@ class AppTheme {
         minimumSize: const Size(0, AppSpacing.buttonHeightLg),
         shape: const RoundedRectangleBorder(borderRadius: AppSpacing.roundedXl),
         textStyle: AppTextStyles.buttonText,
+      ),
+    ),
+
+    iconButtonTheme: IconButtonThemeData(
+      style: IconButton.styleFrom(
+        padding: AppSpacing.insetMd,
+        backgroundColor: AppColors.paleMint54,
+        shape: const CircleBorder(),
+        iconSize: AppSpacing.iconMxl,
       ),
     ),
 

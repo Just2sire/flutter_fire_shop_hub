@@ -9,12 +9,12 @@ class AppTextStyles {
 
   static const lightTextTheme = TextTheme(
     displayLarge: TextStyle(
-      fontSize: 57,
+      fontSize: 60,
       fontWeight: FontWeight.w400,
       color: AppColors.ink,
     ),
     displayMedium: TextStyle(
-      fontSize: 45,
+      fontSize: 48,
       fontWeight: FontWeight.w400,
       color: AppColors.ink,
     ),
@@ -87,12 +87,12 @@ class AppTextStyles {
 
   static const darkTextTheme = TextTheme(
     displayLarge: TextStyle(
-      fontSize: 57,
+      fontSize: 60,
       fontWeight: FontWeight.w400,
       color: AppColors.paleMint,
     ),
     displayMedium: TextStyle(
-      fontSize: 45,
+      fontSize: 48,
       fontWeight: FontWeight.w400,
       color: AppColors.paleMint,
     ),

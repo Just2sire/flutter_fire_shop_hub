@@ -4,75 +4,127 @@ import "package:shop_hub/core/routing/app_routes.dart";
 import "package:shop_hub/presentation/pages/index.dart";
 import "package:shop_hub/presentation/widgets/app_scaffold.dart";
 
+import "app_navigator_key.dart";
+import "app_transitions.dart";
+
 final appRouter = GoRouter(
+  debugLogDiagnostics: true,
+  navigatorKey: AppNavigatorKey.instance,
   initialLocation: AppRoutes.welcome,
   errorBuilder: (context, state) =>
       const AppScaffold(body: Center(child: Text("ERROR"))),
   routes: [
     GoRoute(
       path: AppRoutes.welcome,
-      builder: (context, state) => const WelcomePage(),
+      pageBuilder: (context, state) => AppTransitions.fadeSlide(
+        context: context,
+        state: state,
+        child: const WelcomePage(),
+      ),
+      // builder: (context, state) => const WelcomePage(),
     ),
-    // GoRoute(
-    //   path: AppRoutes.watchlist,
-    //   builder: (context, state) => const WatchlistPage(),
-    // ),
-    // // App shell with bottom navigation
-    // StatefulShellRoute.indexedStack(
-    //   builder: (context, state, navigationShell) {
-    //     return AppShell(navigationShell: navigationShell);
-    //   },
-    //   branches: [
-    //     StatefulShellBranch(
-    //       routes: [
-    //         GoRoute(
-    //           path: AppRoutes.home,
-    //           builder: (context, state) => const HomePage(),
-    //         ),
-    //       ],
-    //     ),
-    //     StatefulShellBranch(
-    //       routes: [
-    //         GoRoute(
-    //           path: AppRoutes.movies,
-    //           builder: (context, state) => const MoviesPage(),
-    //           routes: [
-    //             GoRoute(
-    //               path: ":id",
-    //               builder: (_, state) {
-    //                 final id = state.pathParameters["id"] ?? "2";
-    //                 return MovieDetailPage(movieId: id);
-    //               },
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //     StatefulShellBranch(
-    //       routes: [
-    //         GoRoute(
-    //           path: AppRoutes.favourites,
-    //           builder: (context, state) => const FavoritesPage(),
-    //         ),
-    //       ],
-    //     ),
-    //     StatefulShellBranch(
-    //       routes: [
-    //         GoRoute(
-    //           path: AppRoutes.profile,
-    //           builder: (context, state) => const ProfilePage(),
-    //           routes: [
-    //             GoRoute(
-    //               path: "edit",
-    //               builder: (_, state) {
-    //                 return const EditProfilePage();
-    //               },
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // ),
+    GoRoute(
+      path: AppRoutes.card,
+      pageBuilder: (context, state) => AppTransitions.fadeSlide(
+        context: context,
+        state: state,
+        child: const AppScaffold(body: Center(child: Text("PANIER"))),
+      ),
+      // builder: (context, state) =>
+      //     const AppScaffold(body: Center(child: Text("PANIER"))),
+    ),
+    // App shell with bottom navigation
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return AppShell(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.home,
+              pageBuilder: (context, state) => AppTransitions.fadeSlide(
+                context: context,
+                state: state,
+                child: const HomePage(),
+              ),
+              // builder: (context, state) =>
+              //     const AppScaffold(body: Center(child: Text("HOME"))),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.products,
+              pageBuilder: (context, state) => AppTransitions.fadeSlide(
+                context: context,
+                state: state,
+                child: const AppScaffold(body: Center(child: Text("PRODUITS"))),
+              ),
+              // builder: (context, state) =>
+              //     const AppScaffold(body: Center(child: Text("PRODUIT"))),
+              routes: [
+                GoRoute(
+                  path: ":id",
+                  pageBuilder: (context, state) {
+                    final id = state.pathParameters["id"] ?? "0";
+                    return AppTransitions.fadeSlide(
+                      context: context,
+                      state: state,
+                      child: AppScaffold(
+                        body: Center(child: Text("PRODUIT $id")),
+                      ),
+                    );
+                  },
+                  // builder: (_, state) {
+                  //   final id = state.pathParameters["id"] ?? "0";
+                  //   return AppScaffold(
+                  //     body: Center(child: Text("PRODUIT $id")),
+                  //   );
+                  // },
+                ),
+              ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.favourites,
+              pageBuilder: (context, state) => AppTransitions.fadeSlide(
+                context: context,
+                state: state,
+                child: const AppScaffold(body: Center(child: Text("FAVORIS"))),
+              ),
+              // builder: (context, state) =>
+              //     const AppScaffold(body: Center(child: Text("FAVORIS"))),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.profile,
+              pageBuilder: (context, state) => AppTransitions.fadeSlide(
+                context: context,
+                state: state,
+                child: const AppScaffold(body: Center(child: Text("PROFIL"))),
+              ),
+              // builder: (context, state) =>
+              //     const AppScaffold(body: Center(child: Text("PROFIL"))),
+              //   routes: [
+              //     GoRoute(
+              //       path: "edit",
+              //       builder: (_, state) {
+              //         return const EditProfilePage();
+              //       },
+              //     ),
+              //   ],
+            ),
+          ],
+        ),
+      ],
+    ),
   ],
 );
