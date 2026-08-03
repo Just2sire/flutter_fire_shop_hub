@@ -46,6 +46,12 @@ flutter:
     - family: Outfit
       fonts:
         - asset: assets/fonts/Outfit-Regular.ttf
+          weight: 400
     - family: Fellix
       fonts:
         - asset: assets/fonts/Fellix-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Fellix-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Fellix-SemiBold.ttf
+          weight: 600
