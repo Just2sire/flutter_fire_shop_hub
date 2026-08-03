@@ -1,0 +1,51 @@
+name: shop_hub
+description: "Une application e-commerce fully-featured construite avec Flutter et Riverpod, démontrant une architecture scalable, une gestion d'état sophistiquée, et des patterns real-world."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.14.0-68.0.dev
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_local_notifications: ^22.2.0
+  flutter_riverpod: ^3.4.2
+  flutter_timezone: ^5.1.0
+  go_router: ^17.3.0
+  hugeicons: ^1.1.7
+  timezone: ^0.11.1
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.8
+  flutter_test:
+    sdk: flutter
+
+# flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "#fefefe"
+  color_dark: "#1C1B1F"
+  # color_dark: "#fefefe"
+  image: assets/images/shop_hub_light.png
+  image_dark: assets/images/shop_hub_dark.png
+#  branding: assets/images/logo-cofa-512.png
+#  branding_dark: assets/images/logo-cofa-512.png
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/fonts/
+    - assets/images/
+    - assets/data/
+
+  fonts:
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/Outfit-Regular.ttf
+    - family: Fellix
+      fonts:
+        - asset: assets/fonts/Fellix-Regular.ttf

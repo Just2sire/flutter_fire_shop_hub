@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Clothes",
+    "slug": "clothes",
+    "image": "https://i.imgur.com/QkIa5tT.jpeg",
+    "creationAt": "2026-08-02T23:32:37.000Z",
+    "updatedAt": "2026-08-03T00:55:53.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Mob",
+    "slug": "mob",
+    "image": "https://placeimg.com/640/480/any",
+    "creationAt": "2026-08-02T23:32:37.000Z",
+    "updatedAt": "2026-08-03T07:07:30.000Z"
+  },
+  {
+    "id": 3,
+    "name": "Furniture",
+    "slug": "furniture",
+    "image": "https://i.imgur.com/Qphac99.jpeg",
+    "creationAt": "2026-08-02T23:32:37.000Z",
+    "updatedAt": "2026-08-02T23:32:37.000Z"
+  },
+  {
+    "id": 4,
+    "name": "Shoes",
+    "slug": "shoes",
+    "image": "https://i.imgur.com/qNOjJje.jpeg",
+    "creationAt": "2026-08-02T23:32:37.000Z",
+    "updatedAt": "2026-08-02T23:32:37.000Z"
+  },
+  {
+    "id": 5,
+    "name": "Miscellaneous",
+    "slug": "miscellaneous",
+    "image": "https://i.imgur.com/BG8J0Fj.jpg",
+    "creationAt": "2026-08-02T23:32:37.000Z",
+    "updatedAt": "2026-08-02T23:32:37.000Z"
+  },
+  {
+    "id": 102,
+    "name": "Dress",
+    "slug": "dress",
+    "image": "https://m.media-amazon.com/images/I/519htrVcWKL._AC_UY1000_.jpg",
+    "creationAt": "2026-08-03T07:21:35.000Z",
+    "updatedAt": "2026-08-03T07:21:35.000Z"
+  }
+]
