@@ -7,4 +7,8 @@ class AppAssets {
   static const welcomeOutfit = "$_imagesBase/welcome_outfit.jpg";
 
   static const userIcon = "$_imagesBase/user_icon.png";
+
+  static const sofa = "$_imagesBase/sofa.png";
+  static const chair = "$_imagesBase/chair.png";
+
 }

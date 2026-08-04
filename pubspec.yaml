@@ -13,6 +13,7 @@ dependencies:
   flutter_riverpod: ^3.4.2
   flutter_timezone: ^5.1.0
   go_router: ^17.3.0
+  http: ^1.6.0
   hugeicons: ^1.1.7
   timezone: ^0.11.1
 

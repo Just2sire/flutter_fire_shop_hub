@@ -28,7 +28,7 @@ final appNavItemsProvider = Provider(
     ),
     (
       index: 3,
-      icon: HugeIcons.strokeRoundedUser02,
+      icon: HugeIcons.strokeRoundedUserCircle,
       label: "Profile",
       route: AppRoutes.profile,
     ),

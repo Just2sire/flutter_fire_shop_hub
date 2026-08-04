@@ -161,14 +161,14 @@ class AppTextFormField extends StatelessWidget {
                         ? null
                         : IconButton(
                             onPressed: prefixIconOnClick,
-                            icon: Icon(prefixIconData, size: AppSpacing.iconMd),
+                            icon: Icon(prefixIconData, size: AppSpacing.iconMxl),
                           )),
                 suffixIcon:
                     suffixIcon ??
                     (suffixIconData != null
                         ? IconButton(
                             onPressed: suffixIconOnClick,
-                            icon: Icon(suffixIconData, size: AppSpacing.iconMd),
+                            icon: Icon(suffixIconData, size: AppSpacing.iconLg),
                           )
                         : null),
                 filled: filled,

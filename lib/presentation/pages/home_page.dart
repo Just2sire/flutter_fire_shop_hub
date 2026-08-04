@@ -3,7 +3,8 @@ import "package:hugeicons/hugeicons.dart";
 import "package:shop_hub/core/constants/app_assets.dart";
 import "package:shop_hub/core/extensions/build_context_extensions.dart";
 import "package:shop_hub/core/theme/app_spacing.dart";
-import "package:shop_hub/presentation/widgets/index.dart" show AppScaffold;
+import "package:shop_hub/presentation/widgets/index.dart"
+    show AppScaffold, AppTextFormField;
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -30,8 +31,70 @@ class HomePage extends StatelessWidget {
               textAlign: .start,
             ),
           ),
-          // AppTopbar(title: "title"),
-          const Center(child: Text("HOME")),
+          const AppTextFormField(
+            // prefixIcon: HugeIcon(
+            //   icon: HugeIcons.strokeRoundedSearch01,
+            //   size: AppSpacing.iconMd,
+            //   color: Colors.red,
+            // ),
+            filled: true,
+            prefixIcon: Icon(Icons.search_outlined, size: AppSpacing.iconMxl),
+            hintText: "Recherche...",
+          ),
+          Card(
+            margin: .zero,
+            child: Container(
+              height: AppSpacing.yotta * 1.5,
+              padding: AppSpacing.cardPaddingUltraCompact,
+              child: Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: Column(
+                      mainAxisAlignment: .spaceEvenly,
+                      crossAxisAlignment: .start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: "Obtener jusqu'à ",
+                            style: textTheme.titleMedium!.copyWith(
+                              fontWeight: .normal,
+                            ),
+                            children: const [
+                              TextSpan(
+                                text: "20%",
+                                style: TextStyle(fontWeight: .bold),
+                              ),
+                              TextSpan(text: " de réduction sur tout achat"),
+                            ],
+                          ),
+                        ),
+                        FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: colorScheme.surface,
+                            iconAlignment: .end,
+                          ),
+                          onPressed: () {},
+                          label: Text("Profiter maintenant", style: textTheme.bodyMedium!.copyWith(
+                            color: colorScheme.onSurface,
+                          ),),
+                          icon: HugeIcon(
+                            icon: HugeIcons.strokeRoundedArrowRight02,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Image.asset(AppAssets.chair, height: 200),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
