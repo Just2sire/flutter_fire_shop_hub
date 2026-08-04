@@ -57,11 +57,15 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.products,
-              pageBuilder: (context, state) => AppTransitions.fadeSlide(
-                context: context,
-                state: state,
-                child: const AppScaffold(body: Center(child: Text("PRODUITS"))),
-              ),
+              pageBuilder: (context, state) {
+                return AppTransitions.fadeSlide(
+                  context: context,
+                  state: state,
+                  child: const AppScaffold(
+                    body: Center(child: Text("PRODUITS")),
+                  ),
+                );
+              },
               // builder: (context, state) =>
               //     const AppScaffold(body: Center(child: Text("PRODUIT"))),
               routes: [
