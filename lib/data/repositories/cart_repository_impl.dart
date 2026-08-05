@@ -1,5 +1,4 @@
 import "package:shop_hub/data/models/cart_item.dart";
-import "package:shop_hub/data/models/product.dart";
 import "package:shop_hub/data/services/local_storage_service.dart";
 import "package:shop_hub/domain/repositories/cart_repository.dart";
 
@@ -9,11 +8,8 @@ class CartRepositoryImpl implements CartRepository {
   final LocalStorageService _localStorageService;
 
   @override
-  Future<bool> addItem({
-    required Product product,
-    required int quantity,
-  }) async {
-    return _localStorageService.addToCart(product, quantity);
+  Future<bool> addItem(CartItem item) async {
+    return _localStorageService.addToCart(item);
   }
 
   @override
@@ -27,20 +23,17 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<bool> removeItem(Product product) async {
-    return _localStorageService.removeFromCart(product);
+  Future<bool> removeItem(CartItem item) async {
+    return _localStorageService.removeFromCart(item);
   }
 
   @override
-  Future<bool> updateQuantity({
-    required Product product,
-    required int quantity,
-  }) {
-    return _localStorageService.updateCartItemQuantity(product, quantity);
+  Future<bool> updateQuantity(CartItem item) {
+    return _localStorageService.updateCartItemQuantity(item);
   }
 
   @override
-  Future<bool> toggleCartItem(Product product) {
-    return _localStorageService.toggleCartItem(product);
+  Future<bool> toggleCartItem(CartItem item) {
+    return _localStorageService.toggleCartItem(item);
   }
 }

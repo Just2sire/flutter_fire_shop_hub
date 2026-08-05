@@ -40,9 +40,12 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Either<Failure, List<Product>>> getProductsByCategory({
     required String slug,
+    ProductFilter? filter,
   }) async {
-    if (isConnected) return remoteDatasource.getProductsByCategory(slug: slug);
-    return localDatasource.getProductsByCategory(slug: slug);
+    if (isConnected) {
+      return remoteDatasource.getProductsByCategory(slug: slug, filter: filter);
+    }
+    return localDatasource.getProductsByCategory(slug: slug, filter: filter);
   }
 
   @override

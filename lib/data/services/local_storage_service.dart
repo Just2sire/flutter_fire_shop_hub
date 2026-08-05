@@ -310,20 +310,20 @@ class LocalStorageService {
   }
 
   /// Ajoute un article au panier.
-  Future<bool> addToCart(Product product, [int quantity = 1]) async {
+  Future<bool> addToCart(CartItem item) async {
     final cartItems = getCartItems();
-    if (cartItems.any((item) => item.product.id == product.id)) return true;
+    if (cartItems.any((i) => i.product.id == item.product.id)) return true;
     return saveCartItems([
       ...cartItems,
-      CartItem(product: product, quantity: quantity),
+      CartItem(product: item.product, quantity: item.quantity),
     ]);
   }
 
   /// Supprime un article du panier.
-  Future<bool> removeFromCart(Product product) async {
+  Future<bool> removeFromCart(CartItem item) async {
     final cartItems = getCartItems();
     final updated = cartItems
-        .where((item) => item.product.id != product.id)
+        .where((i) => i.product.id != item.product.id)
         .toList();
     return saveCartItems(updated);
   }
@@ -334,16 +334,16 @@ class LocalStorageService {
   }
 
   /// Vérifie si un article est dans le panier.
-  bool isCartItem(Product product) {
-    return getCartItems().any((item) => item.product.id == product.id);
+  bool isCartItem(CartItem item) {
+    return getCartItems().any((i) => i.product.id == item.product.id);
   }
 
   /// Alterne le statut panier d'un article.
-  Future<bool> toggleCartItem(Product product) async {
-    if (isCartItem(product)) {
-      return removeFromCart(product);
+  Future<bool> toggleCartItem(CartItem item) async {
+    if (isCartItem(item)) {
+      return removeFromCart(item);
     } else {
-      return addToCart(product);
+      return addToCart(item);
     }
   }
 
@@ -355,11 +355,11 @@ class LocalStorageService {
       getCartItems().fold(0, (total, item) => total + item.totalPrice);
 
   /// Modifier la quantité d'un article dans le panier
-  Future<bool> updateCartItemQuantity(Product product, int quantity) async {
+  Future<bool> updateCartItemQuantity(CartItem item) async {
     final cartItems = getCartItems();
-    final updated = cartItems.map((item) {
-      if (item.product.id == product.id) {
-        return item.copyWith(quantity: quantity);
+    final updated = cartItems.map((i) {
+      if (i.product.id == item.product.id) {
+        return i.copyWith(quantity: item.quantity);
       }
       return item;
     }).toList();

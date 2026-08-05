@@ -11,5 +11,6 @@ abstract class ProductRepository {
   Future<Either<Failure, List<Category>>> getProductCategories();
   Future<Either<Failure, List<Product>>> getProductsByCategory({
     required String slug,
+    ProductFilter? filter
   });
 }
