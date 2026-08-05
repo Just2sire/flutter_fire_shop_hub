@@ -5,7 +5,7 @@ class AppKeys {
   static const email = "email";
   static const phone = "phone";
   static const favorites = "favorites";
-  static const watchlist = "watchlist";
+  static const cart = "panier";
   static const themeMode = "themeMode";
 
 

@@ -76,9 +76,12 @@ class HomePage extends StatelessWidget {
                             iconAlignment: .end,
                           ),
                           onPressed: () {},
-                          label: Text("Profiter maintenant", style: textTheme.bodyMedium!.copyWith(
-                            color: colorScheme.onSurface,
-                          ),),
+                          label: Text(
+                            "Profiter maintenant",
+                            style: textTheme.bodyMedium!.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
                           icon: HugeIcon(
                             icon: HugeIcons.strokeRoundedArrowRight02,
                             color: colorScheme.onSurface,

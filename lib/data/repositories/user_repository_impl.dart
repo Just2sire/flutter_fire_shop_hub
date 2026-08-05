@@ -1,24 +1,19 @@
-import "package:movify/data/models/user_model.dart";
-import "package:movify/data/services/local_storage_service.dart";
-import "package:movify/domain/entities/user.dart";
-import "package:movify/domain/repositories/user_repository.dart";
+import "../../domain/repositories/user_repository.dart";
+import "../models/user.dart";
+import "../services/local_storage_service.dart";
 
 class UserRepositoryImpl implements UserRepository {
   const UserRepositoryImpl();
 
   @override
-  Future<bool> hasName() => SharedPrefsService.hasName;
-
-  @override
   Future<User> getUser() async {
-    final userModel = await SharedPrefsService.getUser;
-    return userModel.toEntity();
+    final user = await SharedPrefsService.getUser;
+    return user;
   }
 
   @override
   Future<bool> saveUser(User user) {
-    final userModel = UserModel.fromEntity(user);
-    return SharedPrefsService.saveUser(userModel);
+    return SharedPrefsService.saveUser(user);
   }
 
   @override
