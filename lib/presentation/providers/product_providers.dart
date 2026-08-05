@@ -16,10 +16,11 @@ final productLocalDataSourceProvider = Provider((ref) {
 });
 
 final productRepositoryProvider = Provider((ref) {
+  final isConnected = ref.watch(networkStatusProvider).value ?? true;
   return ProductRepositoryImpl(
     remoteDatasource: ref.watch(productRemoteDataSourceProvider),
     localDatasource: ref.watch(productLocalDataSourceProvider),
-    isConnected: true,
+    isConnected: isConnected,
   );
 });
 

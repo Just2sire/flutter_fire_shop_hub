@@ -7,6 +7,11 @@ final connectivityServiceProvider = Provider(
   (ref) => ConnectivityService(Connectivity()),
 );
 
+final networkStatusProvider = StreamProvider<bool>((ref) {
+  final connectivityService = ref.watch(connectivityServiceProvider);
+  return connectivityService.connectionStream;
+});
+
 final apiServiceProvider = Provider((ref) {
   final connectivity = ref.watch(connectivityServiceProvider);
 

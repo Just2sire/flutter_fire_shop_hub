@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
@@ -7,7 +9,7 @@ import "package:shop_hub/core/constants/notification_channels.dart";
 import "package:shop_hub/core/extensions/index.dart";
 import "package:shop_hub/core/theme/app_colors.dart";
 import "package:shop_hub/core/theme/app_spacing.dart";
-import "package:shop_hub/presentation/providers/notification_providers.dart";
+import "package:shop_hub/presentation/providers/index.dart";
 import "package:shop_hub/presentation/widgets/app_elevated_button.dart";
 
 class WelcomePage extends ConsumerStatefulWidget {
@@ -18,6 +20,16 @@ class WelcomePage extends ConsumerStatefulWidget {
 }
 
 class _WelcomePageState extends ConsumerState<WelcomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final repo = ref.read(localStorageServiceProvider);
+      final isFirstRun = repo.isFirstRun;
+      if (!isFirstRun && mounted) context.goToHome();
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
@@ -103,16 +115,8 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
           title: "Bienvenue sur ShopHub",
           body: "Découvrez les meilleures offres du moment",
         );
+    final repo = ref.read(localStorageServiceProvider);
+    unawaited(repo.setFirstRunCompleted());
     context.goToHome();
-  }
-
-  void showWelcomeNotification() {
-    ref
-        .watch(notificationServiceProvider)
-        .show(
-          id: NotificationId.welcome,
-          title: "Bienvenue sur ShopHub",
-          body: "Découvrez les meilleures offres du moment",
-        );
   }
 }

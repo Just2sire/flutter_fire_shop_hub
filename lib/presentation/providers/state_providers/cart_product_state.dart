@@ -34,25 +34,24 @@ class CartProductNotifier extends AsyncNotifier<CartProductState> {
 
   Future<void> addToCart(CartItem item) async {
     await _cartRepository.addItem(item);
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(loadItems);
+    final updatedCart = await _cartRepository.getCart();
+    state = AsyncValue.data(CartProductState(cartItems: updatedCart));
   }
 
   Future<void> removeFromCart(CartItem item) async {
     await _cartRepository.removeItem(item);
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(loadItems);
+    final updatedCart = await _cartRepository.getCart();
+    state = AsyncValue.data(CartProductState(cartItems: updatedCart));
   }
 
   Future<void> updateCart(CartItem item) async {
     await _cartRepository.updateQuantity(item);
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(loadItems);
+    final updatedCart = await _cartRepository.getCart();
+    state = AsyncValue.data(CartProductState(cartItems: updatedCart));
   }
 
   Future<void> clearCart() async {
     await _cartRepository.clearCart();
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(loadItems);
+    state = const AsyncValue.data(CartProductState());
   }
 }

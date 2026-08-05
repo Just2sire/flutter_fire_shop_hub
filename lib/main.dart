@@ -3,6 +3,7 @@ import "package:flutter_local_notifications/flutter_local_notifications.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:flutter_timezone/flutter_timezone.dart";
 import "package:go_router/go_router.dart";
+import "package:shared_preferences/shared_preferences.dart";
 import "package:shop_hub/app.dart";
 import "package:shop_hub/core/configs/logger.dart";
 import "package:shop_hub/core/routing/app_navigator_key.dart";
@@ -13,6 +14,10 @@ import "package:timezone/timezone.dart" as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // SharedPreferences doit être initialisé avant runApp
+  final prefs = await SharedPreferences.getInstance();
+
   // Timezone — requis pour zonedSchedule (notifications planifiées)
   tz.initializeTimeZones();
   final timezoneInfo = await FlutterTimezone.getLocalTimezone();
@@ -28,6 +33,7 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
         flutterLocalNotificationsPluginProvider.overrideWithValue(
           notificationPlugin,
         ),
