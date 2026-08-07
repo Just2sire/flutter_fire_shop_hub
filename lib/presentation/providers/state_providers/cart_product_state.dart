@@ -12,6 +12,46 @@ class CartProductState {
     return CartProductState(cartItems: cartItems ?? this.cartItems);
   }
 
+  int get discount => cartItems.isEmpty
+      ? 0
+      : (cartItems.fold<num>(
+                  0,
+                  (prev, item) => prev + item.product.discountPercentage,
+                ) /
+                cartItems.length)
+            .toInt();
+
+  double get discountAmount => double.parse(
+    cartItems
+        .fold<double>(
+          0,
+          (prev, item) =>
+              prev +
+              (item.product.price *
+                  item.quantity *
+                  item.product.discountPercentage /
+                  100),
+        )
+        .toStringAsFixed(2),
+  );
+
+  double get shippingPrice => cartItems.length * 3.5;
+
+  double get totalPrice {
+    if (cartItems.isEmpty) {
+      return 0.0;
+    }
+
+    return double.parse(cartItems.fold(
+      0.0,
+      (previousValue, element) => previousValue + element.totalPrice,
+    ).toStringAsFixed(2));
+  }
+
+  double get finalPrice => double.parse(
+    (totalPrice - discountAmount + shippingPrice).toStringAsFixed(2),
+  );
+
   @override
   String toString() {
     return "CartProductState(cartItems: $cartItems)";

@@ -44,6 +44,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/data/
+    - assets/preview/
 
   fonts:
     - family: Outfit

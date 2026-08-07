@@ -10,6 +10,8 @@ import "package:shop_hub/data/models/index.dart" show User;
 import "package:shop_hub/presentation/providers/index.dart";
 import "package:shop_hub/presentation/widgets/index.dart";
 
+import "../../core/constants/notification_channels.dart";
+
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
@@ -39,14 +41,15 @@ class ProfilePage extends ConsumerWidget {
 
           final currentUser =
               user ??
-                  User(
-                    username: "John Doe",
-                    email: "johndoe@gmail.com",
-                    phone: "90876534",
-                  );
+              User(
+                username: "John Doe",
+                email: "johndoe@gmail.com",
+                phone: "90876534",
+              );
 
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
+            spacing: AppSpacing.md,
             children: [
               const AppTopbar(
                 title: "Mon Profil",
@@ -54,19 +57,15 @@ class ProfilePage extends ConsumerWidget {
                 showLeading: false,
                 centerTitle: false,
               ),
-              AppSpacing.gapVXxl,
+              AppSpacing.gapVSm,
               _UserHeroCard(user: currentUser),
-              AppSpacing.gapVXxl,
+              AppSpacing.gapVSm,
               const _SectionHeader(title: "Informations Personnelles"),
-              AppSpacing.gapVMd,
               _InfoCard(user: currentUser),
-              AppSpacing.gapVXxl,
+              AppSpacing.gapVSm,
               const _SectionHeader(title: "Préférences & Paramètres"),
-              AppSpacing.gapVMd,
               const _PreferencesCard(),
-              AppSpacing.gapVXxl,
               const _SectionHeader(title: "Compte"),
-              AppSpacing.gapVMd,
               const _AccountActionsCard(),
             ],
           );
@@ -89,10 +88,7 @@ class _ProfileErrorState extends StatelessWidget {
         children: [
           const Text("Erreur lors du chargement du profil"),
           AppSpacing.gapVMd,
-          AppElevatedButton(
-            onPressed: onRetry,
-            text: "Réessayer",
-          ),
+          AppElevatedButton(onPressed: onRetry, text: "Réessayer"),
         ],
       ),
     );
@@ -245,9 +241,7 @@ class _InfoCard extends StatelessWidget {
             child: AppOutlinedButton(
               onPressed: () => _showEditProfileDialog(context, user),
               text: "Modifier le profil",
-              icon: const HugeIcon(
-                icon: HugeIcons.strokeRoundedEdit02,
-              ),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02),
             ),
           ),
         ],
@@ -286,10 +280,7 @@ class _InfoTile extends StatelessWidget {
       padding: AppSpacing.insetMd,
       child: Row(
         children: [
-          HugeIcon(
-            icon: icon,
-            color: theme.colorScheme.primary,
-          ),
+          HugeIcon(icon: icon, color: theme.colorScheme.primary),
           AppSpacing.gapHMd,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,9 +347,7 @@ class _PreferencesCard extends ConsumerWidget {
               color: colorScheme.primary,
             ),
             title: const Text("Mes Favoris"),
-            trailing: const HugeIcon(
-              icon: HugeIcons.strokeRoundedArrowRight01,
-            ),
+            trailing: const HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01),
             onTap: () => context.push(AppRoutes.favourites),
           ),
           const AppDivider(),
@@ -368,9 +357,7 @@ class _PreferencesCard extends ConsumerWidget {
               color: colorScheme.primary,
             ),
             title: const Text("Mon Panier"),
-            trailing: const HugeIcon(
-              icon: HugeIcons.strokeRoundedArrowRight01,
-            ),
+            trailing: const HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01),
             onTap: () => context.push(AppRoutes.cart),
           ),
         ],
@@ -407,9 +394,7 @@ class _AccountActionsCard extends ConsumerWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        subtitle: const Text(
-          "Réinitialise le nom, l'email et le téléphone",
-        ),
+        subtitle: const Text("Réinitialise le nom, l'email et le téléphone"),
         onTap: () => _confirmResetUser(context, ref),
       ),
     );
@@ -430,10 +415,24 @@ class _AccountActionsCard extends ConsumerWidget {
             child: const Text("Annuler"),
           ),
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.error,
-            ),
+            onPressed: () {
+              ref.read(userProvider.notifier).removeUser();
+              ref.read(cartProvider.notifier).clearCart();
+              ref.read(favoriteProductProvider.notifier).clearFavorites();
+              ref.read(localStorageServiceProvider).resetFirstRun();
+              ref.read(notificationServiceProvider).show(
+                id: NotificationId.goodBye,
+                title: "Au revoir",
+                body: "Votre compte a été réinitialisé",
+              );
+              context
+                ..showSnackBar(
+                  "Les informations utilisateur et "
+                  "le panier ont été réinitialisés.",
+                )
+                ..goToWelcome();
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
             child: const Text("Réinitialiser"),
           ),
         ],
@@ -552,7 +551,9 @@ class _EditProfileBottomSheetState
                     onPressed: () async {
                       if (_formKey.currentState?.validate() == true) {
                         final navigator = Navigator.of(context);
-                        await ref.read(userProvider.notifier).updateUser(
+                        await ref
+                            .read(userProvider.notifier)
+                            .updateUser(
                               username: _usernameController.text.trim(),
                               email: _emailController.text.trim(),
                               phone: _phoneController.text.trim(),

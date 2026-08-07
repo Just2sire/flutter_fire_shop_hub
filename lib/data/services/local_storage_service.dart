@@ -183,6 +183,11 @@ class LocalStorageService {
     return setBool(AppKeys.isFirstRun, false);
   }
 
+  /// Réinitialise le premier lancement.
+  Future<bool> resetFirstRun() async {
+    return setBool(AppKeys.isFirstRun, true);
+  }
+
   // ==================== PROFIL UTILISATEUR / SESSION ====================
 
   /// Indique si un utilisateur est actuellement sauvegardé.

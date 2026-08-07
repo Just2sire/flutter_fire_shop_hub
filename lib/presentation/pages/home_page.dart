@@ -7,8 +7,11 @@ import "package:shop_hub/core/constants/app_assets.dart";
 import "package:shop_hub/core/extensions/build_context_extensions.dart";
 import "package:shop_hub/core/extensions/navigation_extensions.dart";
 import "package:shop_hub/core/theme/app_spacing.dart";
+import "package:shop_hub/data/models/index.dart";
 import "package:shop_hub/presentation/providers/product_providers.dart";
+import "package:shop_hub/presentation/providers/selected_category_provider.dart";
 
+import "../providers/user_providers.dart";
 import "../widgets/index.dart"
     show AppScaffold, AppTextFormField, Skeleton, ProductCard;
 
@@ -28,6 +31,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     // PROVIDERS
     final categoriesRepo = ref.watch(productCategoriesProvider);
     final productRepo = ref.watch(productListProvider);
+    final userAsync = ref.watch(userProvider);
+    final user = userAsync.value;
 
     return AppScaffold(
       scrollable: true,
@@ -36,7 +41,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         spacing: AppSpacing.md,
         crossAxisAlignment: .start,
         children: [
-          _AppTopbar(colorScheme: colorScheme),
+          _AppTopbar(colorScheme: colorScheme, user: user),
           SizedBox(
             width: context.screenWidth * .8,
             child: Text(
@@ -127,8 +132,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                   itemBuilder: (context, index) {
                     final category = categories[index];
                     return GestureDetector(
-                      // TODO Handle navigation to screen with current
-                      // category products
+                      onTap: () {
+                        ref.read(selectedCategoryProvider.notifier).state =
+                            category.slug;
+                        context.goToProducts();
+                      },
                       child: Padding(
                         padding: const EdgeInsets.only(right: AppSpacing.md),
                         child: Chip(
@@ -209,9 +217,10 @@ class _HomePageState extends ConsumerState<HomePage> {
 }
 
 class _AppTopbar extends StatelessWidget {
-  const new({required this.colorScheme});
+  const new({required this.colorScheme, this.user});
 
   final ColorScheme colorScheme;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +232,32 @@ class _AppTopbar extends StatelessWidget {
           radius: AppSpacing.xxl,
           backgroundImage: const AssetImage(AppAssets.userIcon),
         ),
+        RichText(
+          text: TextSpan(
+            text: "Salut 👋\n",
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontWeight: .w500,
+            ),
+            children: [
+              TextSpan(
+                text: user?.username ?? "Aholou",
+                style: context.textTheme.titleLarge!.copyWith(
+                  fontWeight: .bold
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Column(
+        //   crossAxisAlignment: .start,
+        //   children: [
+        //     Text("Salut 👋", style: context.textTheme.bodyMedium),
+        //     Text(
+        //       user?.username ?? "Aholou",
+        //       style: context.textTheme.titleMedium,
+        //     ),
+        //   ],
+        // ),
         const Spacer(),
         IconButton(
           style: IconButton.styleFrom(

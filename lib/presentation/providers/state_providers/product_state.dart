@@ -51,12 +51,17 @@ class ProductListNotifier extends AsyncNotifier<ProductState> {
       // Sinon, on garde la liste 'products' existante et on ne met à jour
       // que 'filteredProducts'.
       final currentProducts = state.value?.products;
+      final allProducts = filter == null
+          ? loadedProducts
+          : (currentProducts != null && currentProducts.isNotEmpty
+              ? currentProducts
+              : loadedProducts);
+      final finalFiltered =
+          filter != null ? filter.apply(allProducts) : loadedProducts;
 
       return ProductState(
-        products: filter == null
-            ? loadedProducts
-            : (currentProducts ?? loadedProducts),
-        filteredProducts: loadedProducts,
+        products: allProducts,
+        filteredProducts: finalFiltered,
         filterParam: filter,
       );
     });

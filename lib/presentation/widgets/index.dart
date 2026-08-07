@@ -7,5 +7,6 @@ export "app_progress_indicator.dart";
 export "app_scaffold.dart";
 export "app_text_form_field.dart";
 export "app_topbar.dart";
+export "filters_bottom_sheet.dart";
 export "product_card.dart";
 export "skeleton.dart";

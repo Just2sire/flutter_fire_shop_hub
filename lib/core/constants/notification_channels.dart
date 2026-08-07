@@ -22,6 +22,8 @@ class NotificationId {
 
   static const int welcome = 1;
   static const int accountUpdate = 2;
+  static const int goodBye = 3;
+  static const int checkout = 4;
 
   // Plage 100–9999 réservée aux rappels dynamiques (entityId-based)
   static int forReminder(int entityId) => 100 + (entityId % 9900);

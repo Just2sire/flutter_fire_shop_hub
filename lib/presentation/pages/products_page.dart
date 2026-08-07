@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:hugeicons/hugeicons.dart";
@@ -6,9 +8,17 @@ import "package:shop_hub/core/extensions/navigation_extensions.dart";
 import "package:shop_hub/core/theme/app_spacing.dart";
 import "package:shop_hub/data/models/index.dart";
 import "package:shop_hub/presentation/widgets/index.dart"
-    show AppScaffold, AppTopbar, AppTextFormField, Skeleton, ProductCard;
+    show
+        AppOutlinedButton,
+        AppScaffold,
+        AppTextFormField,
+        AppTopbar,
+        FiltersBottomSheet,
+        ProductCard,
+        Skeleton;
 
 import "../providers/product_providers.dart";
+import "../providers/selected_category_provider.dart";
 
 class ProductsPage extends ConsumerStatefulWidget {
   const ProductsPage({super.key});
@@ -25,6 +35,23 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+
+    // Filtrer par catégorie si une catégorie a été sélectionnée depuis la home
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final categorySlug = ref.read(selectedCategoryProvider);
+      if (categorySlug != null) {
+        setState(() {
+          _productFilter = _productFilter.copyWith(category: categorySlug);
+        });
+        ref.read(selectedCategoryProvider.notifier).state = null;
+        unawaited(
+          ref.read(productListProvider.notifier).filterByCategory(
+            categorySlug,
+            _productFilter,
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -33,12 +60,61 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
     super.dispose();
   }
 
+  void _onSearchChanged(String? query) {
+    final value = query ?? "";
+    setState(() {
+      _productFilter = _productFilter.copyWith(
+        searchQuery: value.isEmpty ? null : value,
+      );
+    });
+    unawaited(
+      ref.read(productListProvider.notifier).filterProducts(_productFilter),
+    );
+  }
+
+  Future<void> _openFilterBottomSheet() async {
+    final categories = ref.read(productCategoriesProvider).value ?? [];
+    final result = await showModalBottomSheet<ProductFilter>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+        useRootNavigator: true,
+      builder: (context) => FiltersBottomSheet(
+        initialFilter: _productFilter,
+        availableCategories: categories,
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        _productFilter = result;
+        if (result.searchQuery != null) {
+          _searchController.text = result.searchQuery!;
+        }
+      });
+      unawaited(ref.read(productListProvider.notifier).filterProducts(result));
+    }
+  }
+
+  void _resetFilters() {
+    _searchController.clear();
+    setState(() {
+      _productFilter = const ProductFilter();
+    });
+    unawaited(
+      ref
+          .read(productListProvider.notifier)
+          .filterProducts(const ProductFilter()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final isMobile = context.isMobile;
     final productsRepo = ref.watch(productListProvider);
+
     return AppScaffold(
       body: Column(
         spacing: AppSpacing.md,
@@ -50,8 +126,6 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
               IconButton(
                 style: IconButton.styleFrom(
                   padding: AppSpacing.insetMd,
-                  // backgroundColor: colorScheme
-                  // .secondary.withValues(alpha: 0.1),
                 ),
                 onPressed: () => context.pushToCart(),
                 icon: const HugeIcon(
@@ -71,11 +145,11 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                   controller: _searchController,
                   hintText: "Recherche par titre, desc...",
                   textInputAction: TextInputAction.search,
-                  onChanged: (query) {},
+                  onChanged: _onSearchChanged,
                   suffixIcon: Padding(
                     padding: const EdgeInsets.only(right: AppSpacing.xs),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () => _onSearchChanged(_searchController.text),
                       icon: const Icon(
                         Icons.search_outlined,
                         size: AppSpacing.iconLg,
@@ -85,6 +159,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                 ),
               ),
               Badge(
+                isLabelVisible: _productFilter.hasActiveFilter,
                 textColor: colorScheme.tertiary,
                 child: IconButton(
                   style: IconButton.styleFrom(
@@ -96,7 +171,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                         ? colorScheme.primary
                         : colorScheme.primaryContainer,
                   ),
-                  onPressed: () {},
+                  onPressed: _openFilterBottomSheet,
                   icon: HugeIcon(
                     icon: HugeIcons.strokeRoundedFilterMail,
                     color: _productFilter.hasActiveFilter
@@ -110,7 +185,37 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
           Expanded(
             child: productsRepo.map(
               data: (data) {
-                final products = data.value.products;
+                final products = data.value.filteredProducts;
+
+                if (products.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          HugeIcon(
+                            icon: HugeIcons.strokeRoundedSearch01,
+                            size: AppSpacing.iconXxxl,
+                            color: colorScheme.outline,
+                          ),
+                          AppSpacing.gapVMd,
+                          Text(
+                            "Aucun produit ne correspond à vos filtres.",
+                            style: textTheme.titleMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                          AppSpacing.gapVSm,
+                          AppOutlinedButton(
+                            onPressed: _resetFilters,
+                            text: "Réinitialiser les filtres",
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
                 return GridView.builder(
                   itemCount: products.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
