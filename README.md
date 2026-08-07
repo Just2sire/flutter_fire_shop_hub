@@ -141,7 +141,7 @@ return productList.when(
 
 1. **Cloner le projet sur votre machine localement** :
    ```bash
-   git clone https://github.com/VotreUser/shop_hub.git
+   git clone https://github.com/Just2sire/flutter_fire_shop_hub
    cd shop_hub
    ```
 
