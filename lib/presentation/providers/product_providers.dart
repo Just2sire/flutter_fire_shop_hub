@@ -16,11 +16,11 @@ final productLocalDataSourceProvider = Provider((ref) {
 });
 
 final productRepositoryProvider = Provider((ref) {
-  final isConnected = ref.watch(networkStatusProvider).value ?? true;
+  // final isConnected = ref.watch(networkStatusProvider).value ?? true;
   return ProductRepositoryImpl(
-    remoteDatasource: ref.watch(productRemoteDataSourceProvider),
-    localDatasource: ref.watch(productLocalDataSourceProvider),
-    isConnected: isConnected,
+    remoteDatasource: ref.read(productRemoteDataSourceProvider),
+    localDatasource: ref.read(productLocalDataSourceProvider),
+    isConnected: true, // isConnected,
   );
 });
 
@@ -33,7 +33,7 @@ final productDetailProvider = FutureProvider.family<Product, String>((
   ref,
   productId,
 ) async {
-  final repository = ref.watch(productRepositoryProvider);
+  final repository = ref.read(productRepositoryProvider);
   final result = await repository.getProduct(productId);
 
   return result.fold(
@@ -43,7 +43,10 @@ final productDetailProvider = FutureProvider.family<Product, String>((
 });
 
 final productCategoriesProvider = FutureProvider<List<Category>>((ref) async {
-  final repository = ref.watch(productRepositoryProvider);
+  // keepAlive : garde le résultat en cache pour éviter les appels API répétés
+  ref.keepAlive();
+
+  final repository = ref.read(productRepositoryProvider);
   final result = await repository.getProductCategories();
 
   return result.fold(

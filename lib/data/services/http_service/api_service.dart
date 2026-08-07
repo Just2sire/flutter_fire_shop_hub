@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_annotating_with_dynamic
+
 import "dart:async";
 import "dart:convert";
 import "dart:io";
@@ -39,7 +41,7 @@ class ApiService {
     Map<String, String>? headers,
     bool requireAuth = false,
     Map<String, String>? queryParameters,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) => _request<T>(
         method: "GET",
         path: path,
@@ -54,7 +56,7 @@ class ApiService {
     Map<String, String>? headers,
     Object? body,
     bool requireAuth = false,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) => _request<T>(
         method: "POST",
         path: path,
@@ -69,7 +71,7 @@ class ApiService {
     Map<String, String>? headers,
     Object? body,
     bool requireAuth = false,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) => _request<T>(
         method: "PUT",
         path: path,
@@ -84,7 +86,7 @@ class ApiService {
     Map<String, String>? headers,
     Object? body,
     bool requireAuth = false,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) => _request<T>(
         method: "PATCH",
         path: path,
@@ -99,7 +101,7 @@ class ApiService {
     Map<String, String>? headers,
     Object? body,
     bool requireAuth = false,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) => _request<T>(
         method: "DELETE",
         path: path,
@@ -115,7 +117,7 @@ class ApiService {
     Map<String, String>? headers,
     Map<String, String>? fields,
     bool requireAuth = false,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) async {
     final uri = _buildUri(path);
     final merged = _mergeHeaders(headers);
@@ -259,7 +261,7 @@ class ApiService {
 
   Either<Failure, T> _parseResponse<T>(
     http.Response response,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   ) {
     final status = response.statusCode;
 
@@ -277,7 +279,7 @@ class ApiService {
       final decoded = json.decode(response.body);
 
       if (status >= 200 && status < 300) {
-        if (parser != null && decoded is Map<String, dynamic>) {
+        if (parser != null) {
           return right(parser(decoded));
         }
         return right(decoded as T);
@@ -320,7 +322,7 @@ class ApiService {
     Map<String, String>? queryParameters,
     Object? body,
     bool requireAuth = false,
-    T Function(Map<String, dynamic>)? parser,
+    T Function(dynamic)? parser,
   }) async {
     final uri = _buildUri(path, queryParameters);
     final merged = _mergeHeaders(headers);

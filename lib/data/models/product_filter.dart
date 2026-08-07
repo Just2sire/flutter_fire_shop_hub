@@ -307,6 +307,30 @@ class ProductFilter {
     return filtered;
   }
 
+  bool get hasActiveFilter =>
+      searchQuery != null &&
+      searchQuery!.trim().isNotEmpty &&
+      category != null &&
+      category!.trim().isNotEmpty &&
+      categories != null &&
+      categories!.isNotEmpty &&
+      brand != null &&
+      brand!.trim().isNotEmpty &&
+      brands != null &&
+      brands!.isNotEmpty &&
+      tags != null &&
+      tags!.isNotEmpty &&
+      minPrice != null &&
+      maxPrice != null &&
+      minRating != null &&
+      maxRating != null &&
+      availabilityStatus != null &&
+      availabilityStatus!.trim().isNotEmpty &&
+      inStockOnly != null &&
+      inStockOnly == true &&
+      sortBy != null &&
+      sortOrder != SortOrder.ascending;
+
   @override
   String toString() {
     return "ProductFilter(searchQuery: $searchQuery, category: $category, "

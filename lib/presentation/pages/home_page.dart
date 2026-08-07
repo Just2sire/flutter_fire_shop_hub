@@ -1,19 +1,16 @@
+// ignore_for_file: unused_element_parameter
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:hugeicons/hugeicons.dart";
 import "package:shop_hub/core/constants/app_assets.dart";
-import "package:shop_hub/core/constants/app_keys.dart";
 import "package:shop_hub/core/extensions/build_context_extensions.dart";
-import "package:shop_hub/core/theme/app_colors.dart";
+import "package:shop_hub/core/extensions/navigation_extensions.dart";
 import "package:shop_hub/core/theme/app_spacing.dart";
-import "package:shop_hub/data/models/cart_item.dart";
-import "package:shop_hub/data/models/product.dart";
-import "package:shop_hub/presentation/providers/cart_providers.dart";
-import "package:shop_hub/presentation/providers/favorite_providers.dart";
 import "package:shop_hub/presentation/providers/product_providers.dart";
 
 import "../widgets/index.dart"
-    show AppScaffold, AppTextFormField, Skeleton, AppIconSwitcher;
+    show AppScaffold, AppTextFormField, Skeleton, ProductCard;
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -177,7 +174,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                   itemBuilder: (context, index) {
                     final product = products[index];
 
-                    return ProductCard(product: product);
+                    return ProductCard(
+                      product: product,
+                      onTap: () => context.pushToProductDetail("${product.id}"),
+                    );
                   },
                 ),
               );
@@ -208,142 +208,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-class ProductCard extends ConsumerWidget {
-  const new({super.key, required this.product});
-
-  final Product product;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = context.textTheme;
-    final colorScheme = context.colorScheme;
-    final fullWidth = context.screenWidth;
-    final isFavorite =
-        ref
-            .watch(favoriteProductProvider)
-            .value
-            ?.favoriteProducts
-            .any((p) => p.id == product.id) ??
-        false;
-    return Card(
-      elevation: AppSpacing.elevationMd,
-      margin: const EdgeInsets.only(right: AppSpacing.md),
-      color: colorScheme.outline.withValues(alpha: .1),
-      child: Container(
-        height: AppSpacing.yotta * 2.85,
-        width: fullWidth * 0.45,
-        decoration: const BoxDecoration(borderRadius: AppSpacing.roundedXxl),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Hero(
-                    tag:
-                        "${AppKeys.articleImageHero}"
-                        "_${product.title}",
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: colorScheme.outline,
-                        borderRadius: AppSpacing.roundedXxl,
-                      ),
-                      child: Image.network(
-                        product.thumbnail,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return ColoredBox(
-                            color: colorScheme.surfaceContainerHighest,
-                            child: HugeIcon(
-                              icon: HugeIcons.strokeRoundedBabyBoyDress,
-                              size: AppSpacing.iconXl,
-                              color: colorScheme.primary,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: AppSpacing.xs,
-                    right: AppSpacing.xs,
-                    child: AppIconSwitcher(
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          ref
-                              .read(favoriteProductProvider.notifier)
-                              .toggleFavorite(product);
-                        },
-                        icon: Icon(
-                          Icons.t
-                        ),
-                        // icon: HugeIcon(
-                        //   icon: HugeIcons.strokeRoundedFavourite,
-                        //   size: AppSpacing.iconXl,
-                        //   color: isFavorite ? AppColors.error : null,
-                        // ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsetsGeometry.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text(
-                      product.title,
-                      style: textTheme.bodyMedium!.copyWith(fontWeight: .bold),
-                      maxLines: 1,
-                      overflow: .ellipsis,
-                    ),
-                    Text(
-                      product.description,
-                      style: textTheme.labelSmall,
-                      overflow: .ellipsis,
-                    ),
-                    Row(
-                      mainAxisAlignment: .spaceBetween,
-                      children: [
-                        Text(
-                          "\$${product.price}",
-                          style: textTheme.titleSmall!.copyWith(
-                            fontWeight: .bold,
-                          ),
-                        ),
-                        InkWell(
-                          radius: AppSpacing.radiusFull,
-                          onTap: () => ref
-                              .read(cartProvider.notifier)
-                              .addToCart(
-                                CartItem(product: product, quantity: 1),
-                              ),
-                          child: const HugeIcon(
-                            icon: HugeIcons.strokeRoundedShoppingCart02,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _AppTopbar extends StatelessWidget {
   const new({required this.colorScheme});
 
@@ -365,7 +229,7 @@ class _AppTopbar extends StatelessWidget {
             padding: AppSpacing.insetMd,
             backgroundColor: colorScheme.secondary.withValues(alpha: 0.1),
           ),
-          onPressed: () {},
+          onPressed: () => context.pushToCart(),
           icon: const HugeIcon(
             icon: HugeIcons.strokeRoundedShoppingBag03,
             size: AppSpacing.iconMxl,

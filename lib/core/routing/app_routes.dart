@@ -8,7 +8,7 @@ class AppRoutes {
   static String products = "/products";
   static String favourites = "/favourite";
   static String profile = "/profile";
-  static String card = "/card";
+  static String cart = "/cart";
 
   //
 }

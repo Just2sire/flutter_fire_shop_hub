@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import "package:shop_hub/core/constants/api_endpoints.dart";
 import "package:shop_hub/data/services/http_service/index.dart";
 
@@ -49,7 +51,7 @@ class ProductRemoteDatasource {
   Future<Either<Failure, Product>> getProduct(String id) async {
     final result = await _apiService.get<Product>(
       "${ApiEndpoints.products}/$id",
-      parser: Product.fromMap,
+      parser: (data) => Product.fromMap(data as Map<String, dynamic>),
     );
 
     return result;
@@ -64,7 +66,7 @@ class ProductRemoteDatasource {
             "La réponse de l'API n'est pas une liste.",
           );
         }
-        return (json as List)
+        return json
             .map((item) => Category.fromMap(item as Map<String, dynamic>))
             .toList();
       },

@@ -24,11 +24,11 @@ final appRouter = GoRouter(
       // builder: (context, state) => const WelcomePage(),
     ),
     GoRoute(
-      path: AppRoutes.card,
+      path: AppRoutes.cart,
       pageBuilder: (context, state) => AppTransitions.fadeSlide(
         context: context,
         state: state,
-        child: const AppScaffold(body: Center(child: Text("PANIER"))),
+        child: const CartPage(),
       ),
       // builder: (context, state) =>
       //     const AppScaffold(body: Center(child: Text("PANIER"))),
@@ -61,34 +61,14 @@ final appRouter = GoRouter(
                 return AppTransitions.fadeSlide(
                   context: context,
                   state: state,
-                  child: const AppScaffold(
-                    body: Center(child: Text("PRODUITS")),
-                  ),
+                  child: const ProductsPage(),
                 );
               },
               // builder: (context, state) =>
               //     const AppScaffold(body: Center(child: Text("PRODUIT"))),
-              routes: [
-                GoRoute(
-                  path: ":id",
-                  pageBuilder: (context, state) {
-                    final id = state.pathParameters["id"] ?? "0";
-                    return AppTransitions.fadeSlide(
-                      context: context,
-                      state: state,
-                      child: AppScaffold(
-                        body: Center(child: Text("PRODUIT $id")),
-                      ),
-                    );
-                  },
-                  // builder: (_, state) {
-                  //   final id = state.pathParameters["id"] ?? "0";
-                  //   return AppScaffold(
-                  //     body: Center(child: Text("PRODUIT $id")),
-                  //   );
-                  // },
-                ),
-              ],
+              // routes: [
+              //
+              // ],
             ),
           ],
         ),
@@ -99,7 +79,7 @@ final appRouter = GoRouter(
               pageBuilder: (context, state) => AppTransitions.fadeSlide(
                 context: context,
                 state: state,
-                child: const AppScaffold(body: Center(child: Text("FAVORIS"))),
+                child: const FavoritePage(),
               ),
               // builder: (context, state) =>
               //     const AppScaffold(body: Center(child: Text("FAVORIS"))),
@@ -113,7 +93,7 @@ final appRouter = GoRouter(
               pageBuilder: (context, state) => AppTransitions.fadeSlide(
                 context: context,
                 state: state,
-                child: const AppScaffold(body: Center(child: Text("PROFIL"))),
+                child: const ProfilePage(),
               ),
               // builder: (context, state) =>
               //     const AppScaffold(body: Center(child: Text("PROFIL"))),
@@ -129,6 +109,23 @@ final appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      path: "${AppRoutes.products}/:id",
+      pageBuilder: (context, state) {
+        final id = state.pathParameters["id"] ?? "1";
+        return AppTransitions.fadeSlide(
+          context: context,
+          state: state,
+          child: ProductDetailPage(productId: id),
+        );
+      },
+      // builder: (_, state) {
+      //   final id = state.pathParameters["id"] ?? "0";
+      //   return AppScaffold(
+      //     body: Center(child: Text("PRODUIT $id")),
+      //   );
+      // },
     ),
   ],
 );

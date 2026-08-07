@@ -4,9 +4,15 @@ import "package:shop_hub/domain/repositories/favorite_product_repository.dart";
 import "package:shop_hub/presentation/providers/favorite_providers.dart";
 
 class FavoriteProductState {
-  const FavoriteProductState({this.favoriteProducts = const []});
+  FavoriteProductState({List<Product> favoriteProducts = const []})
+      : favoriteProducts = _deduplicate(favoriteProducts);
 
   final List<Product> favoriteProducts;
+
+  static List<Product> _deduplicate(List<Product> list) {
+    final seenIds = <int>{};
+    return list.where((p) => seenIds.add(p.id)).toList();
+  }
 
   FavoriteProductState copyWith({List<Product>? favoriteProducts}) {
     return FavoriteProductState(
@@ -36,6 +42,8 @@ class FavoriteProductNotifier extends AsyncNotifier<FavoriteProductState> {
 
   Future<void> addToFavorite(Product product) async {
     final currentFavorites = state.value?.favoriteProducts ?? [];
+    if (currentFavorites.any((p) => p.id == product.id)) return;
+
     final updatedList = [...currentFavorites, product];
     state = AsyncValue.data(
       FavoriteProductState(favoriteProducts: updatedList),
@@ -84,7 +92,7 @@ class FavoriteProductNotifier extends AsyncNotifier<FavoriteProductState> {
       await _favoriteRepository.toggleFavoriteProduct(product);
     } catch (e) {
       // Si la sauvegarde échoue (ex: erreur réseau),
-      //on restaure l'ancienne liste (Rollback)
+      // on restaure l'ancienne liste (Rollback)
       state = AsyncValue.data(
         FavoriteProductState(favoriteProducts: currentFavorites),
       );

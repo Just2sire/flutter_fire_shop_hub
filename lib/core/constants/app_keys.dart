@@ -9,5 +9,5 @@ class AppKeys {
   static const themeMode = "themeMode";
 
 
-  static const movieImageHero = "movie-image-hero";
+  static const articleImageHero = "movie-image-hero";
 }

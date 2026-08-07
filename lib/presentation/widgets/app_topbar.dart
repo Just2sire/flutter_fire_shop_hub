@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:shop_hub/core/extensions/build_context_extensions.dart";
 import "package:shop_hub/core/theme/app_spacing.dart";
 
 class AppTopbar extends StatelessWidget {
@@ -50,16 +51,16 @@ class AppTopbar extends StatelessWidget {
         children: [
           // LEADING
           if (showLeading)
-            leading ?? const BackButton(),
-                // IconButton(
-                //   onPressed: () =>
-                //       context.canPop() ? (onPop ?? context.pop()) : null,
-                //   icon: const Icon(
-                //     LucideIcons.arrowLeft400,
-                //     size: AppSpacing.iconXl,
-                //   ),
-                //   tooltip: "Retour",
-                // ),
+            leading ?? // const BackButton(),
+                IconButton(
+                  onPressed: () =>
+                      context.canPop ? (onPop ?? context.pop()) : null,
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    size: AppSpacing.iconXl,
+                  ),
+                  tooltip: "Retour",
+                ),
 
           // TITLE
           if (subtitle != null && subtitle!.isNotEmpty)

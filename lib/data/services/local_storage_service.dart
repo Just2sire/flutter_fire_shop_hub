@@ -241,20 +241,20 @@ class LocalStorageService {
   /// Ajoute un produit aux favoris par son ID.
   Future<bool> addFavorite(Product product) async {
     final favorites = getFavoriteProducts();
-    if (favorites.contains(product)) return true;
+    if (favorites.any((p) => p.id == product.id)) return true;
     return saveFavoriteProducts([...favorites, product]);
   }
 
   /// Supprime un produit des favoris par son ID.
   Future<bool> removeFavorite(Product product) async {
     final favorites = getFavoriteProducts();
-    final updated = favorites.where((p) => p != product).toList();
+    final updated = favorites.where((p) => p.id != product.id).toList();
     return saveFavoriteProducts(updated);
   }
 
   /// Vérifie si un produit est dans les favoris.
   bool isFavorite(Product product) {
-    return getFavoriteProducts().contains(product);
+    return getFavoriteProducts().any((p) => p.id == product.id);
   }
 
   /// Alterne le statut favori d'un produit.
@@ -266,12 +266,14 @@ class LocalStorageService {
     }
   }
 
-  /// Récupère la liste des produits favoris sérialisés en JSON.
+  /// Récupère la liste des produits favoris sérialisés en JSON sans doublons.
   List<Product> getFavoriteProducts() {
     try {
       final jsonList = getStringList(AppKeys.favorites);
       if (jsonList == null || jsonList.isEmpty) return [];
-      return jsonList.map(Product.fromJson).toList();
+      final products = jsonList.map(Product.fromJson).toList();
+      final seenIds = <int>{};
+      return products.where((p) => seenIds.add(p.id)).toList();
     } catch (e) {
       Log.e("Erreur lecture produits favoris: $e", tag: "LocalStorageService");
       return [];
@@ -306,17 +308,24 @@ class LocalStorageService {
   /// Sauvegarde la liste complète des objets [CartItem] du panier.
   Future<bool> saveCartItems(List<CartItem> cartItems) async {
     final jsonList = cartItems.map((c) => c.toJson()).toList();
-    return setStringList(AppKeys.cart, jsonList.cast<String>());
+    return setStringList(AppKeys.cart, jsonList);
   }
 
   /// Ajoute un article au panier.
   Future<bool> addToCart(CartItem item) async {
     final cartItems = getCartItems();
-    if (cartItems.any((i) => i.product.id == item.product.id)) return true;
-    return saveCartItems([
-      ...cartItems,
-      CartItem(product: item.product, quantity: item.quantity),
-    ]);
+    final index = cartItems.indexWhere((i) => i.product.id == item.product.id);
+
+    if (index != -1) {
+      // Si l'article existe déjà, on incrémente sa quantité
+      cartItems[index] = cartItems[index].copyWith(
+        quantity: cartItems[index].quantity + item.quantity,
+      );
+      return saveCartItems(cartItems);
+    }
+
+    // Sinon on ajoute le nouvel article
+    return saveCartItems([...cartItems, item]);
   }
 
   /// Supprime un article du panier.
@@ -357,12 +366,13 @@ class LocalStorageService {
   /// Modifier la quantité d'un article dans le panier
   Future<bool> updateCartItemQuantity(CartItem item) async {
     final cartItems = getCartItems();
-    final updated = cartItems.map((i) {
-      if (i.product.id == item.product.id) {
-        return i.copyWith(quantity: item.quantity);
-      }
-      return item;
-    }).toList();
+    final updated =
+        cartItems.map((i) {
+          if (i.product.id == item.product.id) {
+            return i.copyWith(quantity: item.quantity);
+          }
+          return i;
+        }).toList();
     return saveCartItems(updated);
   }
 

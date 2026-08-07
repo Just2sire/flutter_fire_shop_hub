@@ -18,6 +18,7 @@ extension NavigationExtensions on BuildContext {
 
   /// Navigation vers la page de détail d'un produit
   void goToProductDetail(String id) => go("${AppRoutes.products}/$id");
+  void pushToProductDetail(String id) => push("${AppRoutes.products}/$id");
 
   /// Navigation vers la page des favoris
   void goFavourite() => AppRoutes.favourites;
@@ -26,8 +27,8 @@ extension NavigationExtensions on BuildContext {
   void goToProfile() => go(AppRoutes.profile);
 
   /// Navigation vers le panier
-  void goToCard() => go(AppRoutes.card);
-  void pushToCard() => push(AppRoutes.card);
+  void goToCart() => go(AppRoutes.cart);
+  void pushToCart() => push(AppRoutes.cart);
 
   /// Navigation vers la page d'erreur
   void goToError() => go(AppRoutes.error);

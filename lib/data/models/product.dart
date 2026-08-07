@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_annotating_with_dynamic
+
 import "dart:convert";
 
 import "package:flutter/foundation.dart";
@@ -29,32 +31,54 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map["id"] as int? ?? 0,
-      title: map["title"] as String? ?? "",
-      description: map["description"] as String? ?? "",
-      category: map["category"] as String? ?? "",
-      price: map["price"] as double? ?? 0.0,
-      discountPercentage: map["discountPercentage"] as double? ?? 0.0,
-      rating: map["rating"] as double? ?? 0.0,
-      stock: map["stock"] as int? ?? 0,
-      tags: List<String>.from(map["tags"] as List<dynamic>),
-      brand: map["brand"] as String? ?? "",
-      sku: map["sku"] as String? ?? "",
-      weight: map["weight"] as int? ?? 0,
-      dimensions: Dimensions.fromMap(map["dimensions"] as Map<String, dynamic>),
-      warrantyInformation: map["warrantyInformation"] as String? ?? "",
-      shippingInformation: map["shippingInformation"] as String? ?? "",
-      availabilityStatus: map["availabilityStatus"] as String? ?? "",
-      returnPolicy: map["returnPolicy"] as String? ?? "",
-      minimumOrderQuantity: map["minimumOrderQuantity"] as int? ?? 0,
-      meta: Meta.fromMap(map["meta"] as Map<String, dynamic>),
-      images: List<String>.from(map["images"] as List<dynamic>),
-      thumbnail: map["thumbnail"] as String? ?? "",
+      id: _parseInt(map["id"], 0),
+      title: map["title"]?.toString() ?? "",
+      description: map["description"]?.toString() ?? "",
+      category: map["category"]?.toString() ?? "",
+      price: _parseDouble(map["price"], 0.0),
+      discountPercentage: _parseDouble(map["discountPercentage"], 0.0),
+      rating: _parseDouble(map["rating"], 0.0),
+      stock: _parseInt(map["stock"], 0),
+      tags:
+          (map["tags"] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+          [],
+      brand: map["brand"]?.toString() ?? "",
+      sku: map["sku"]?.toString() ?? "",
+      weight: _parseInt(map["weight"], 0),
+      dimensions: Dimensions.fromMap(
+        map["dimensions"] as Map<String, dynamic>? ?? {},
+      ),
+      warrantyInformation: map["warrantyInformation"]?.toString() ?? "",
+      shippingInformation: map["shippingInformation"]?.toString() ?? "",
+      availabilityStatus: map["availabilityStatus"]?.toString() ?? "",
+      returnPolicy: map["returnPolicy"]?.toString() ?? "",
+      minimumOrderQuantity: _parseInt(map["minimumOrderQuantity"], 0),
+      meta: Meta.fromMap(map["meta"] as Map<String, dynamic>? ?? {}),
+      images:
+          (map["images"] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      thumbnail: map["thumbnail"]?.toString() ?? "",
     );
   }
 
   factory Product.fromJson(String source) =>
       Product.fromMap(jsonDecode(source) as Map<String, dynamic>);
+
+  static int _parseInt(dynamic value, int defaultValue) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? defaultValue;
+    return defaultValue;
+  }
+
+  static double _parseDouble(dynamic value, double defaultValue) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? defaultValue;
+    return defaultValue;
+  }
   final int id;
   final String title;
   final String description;
@@ -225,9 +249,9 @@ class Dimensions {
 
   factory Dimensions.fromMap(Map<String, dynamic> map) {
     return Dimensions(
-      width: map["width"] as double? ?? 0.0,
-      height: map["height"] as double? ?? 0.0,
-      depth: map["depth"] as double? ?? 0.0,
+      width: (map["width"] as num?)?.toDouble() ?? 0.0,
+      height: (map["height"] as num?)?.toDouble() ?? 0.0,
+      depth: (map["depth"] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -277,21 +301,23 @@ class Meta {
     required this.qrCode,
   });
 
+  factory Meta.fromJson(String source) =>
+      Meta.fromMap(jsonDecode(source) as Map<String, dynamic>);
+
   factory Meta.fromMap(Map<String, dynamic> map) {
     return Meta(
-      createdAt: DateTime.fromMillisecondsSinceEpoch(
-        map["createdAt"] as int? ?? 0,
-      ),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(
-        map["updatedAt"] as int? ?? 0,
-      ),
-      barcode: map["barcode"] as String? ?? "",
-      qrCode: map["qrCode"] as String? ?? "",
+      createdAt: _parseDateTime(map["createdAt"]),
+      updatedAt: _parseDateTime(map["updatedAt"]),
+      barcode: map["barcode"]?.toString() ?? "",
+      qrCode: map["qrCode"]?.toString() ?? "",
     );
   }
 
-  factory Meta.fromJson(String source) =>
-      Meta.fromMap(jsonDecode(source) as Map<String, dynamic>);
+  static DateTime _parseDateTime(dynamic value) {
+    if (value is String) return DateTime.tryParse(value) ?? DateTime(0);
+    if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+    return DateTime(0);
+  }
   final DateTime createdAt;
   final DateTime updatedAt;
   final String barcode;
